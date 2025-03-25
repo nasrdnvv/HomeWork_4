@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import java.util.Random;
+
 public class HW4 {
     public static int bossHealth = 700;
     public static int bossDamage = 50;
@@ -9,6 +11,7 @@ public class HW4 {
     public static String[] heroesAttackType = {"Physical", "Magical", "Kinetic", "Medic", "Golem", "Lucky", "Witcher", "Thor"};
     public static int roundNumber;
     public static Random random = new Random();
+    public static boolean witcherRevived = false;
 
     public static void main(String[] args) {
         showStatistics();
@@ -41,6 +44,7 @@ public class HW4 {
         chooseBossDefence();
         thorStun();
         bossAttack();
+        witcherRevive();
         medicHeal();
         heroesAttack();
         showStatistics();
@@ -58,7 +62,7 @@ public class HW4 {
                 if (heroesAttackType[i].equals(bossDefence)) {
                     int coeff = random.nextInt(2, 10);
                     damage *= coeff;
-                    System.out.println("Critical damage: " + damage);
+                    System.out.println("Критический урон: " + damage);
                 }
                 bossHealth = Math.max(bossHealth - damage, 0);
             }
@@ -99,6 +103,21 @@ public class HW4 {
         }
     }
 
+    public static void witcherRevive() {
+        int witcherIndex = 6;
+        if (!witcherRevived && heroesHealth[witcherIndex] > 0) {
+            for (int i = 0; i < heroesHealth.length; i++) {
+                if (heroesHealth[i] == 0 && i != witcherIndex) {
+                    heroesHealth[i] = heroesHealth[witcherIndex];
+                    heroesHealth[witcherIndex] = 0;
+                    witcherRevived = true;
+                    System.out.println("Witcher воскресил " + heroesAttackType[i] + " и пожертвовал собой!");
+                    break;
+                }
+            }
+        }
+    }
+
     public static void thorStun() {
         int thorIndex = 7;
         if (heroesHealth[thorIndex] > 0 && random.nextBoolean()) {
@@ -108,12 +127,13 @@ public class HW4 {
     }
 
     public static void showStatistics() {
-        System.out.println("ROUND " + roundNumber);
-        System.out.println("Boss health: " + bossHealth);
+        System.out.println("РАУНД " + roundNumber);
+        System.out.println("Здоровье босса: " + bossHealth);
         for (int i = 0; i < heroesHealth.length; i++) {
-            System.out.println(heroesAttackType[i] + " health: " + heroesHealth[i]);
+            System.out.println(heroesAttackType[i] + " Здоровье: " + heroesHealth[i]);
         }
         System.out.println("-----------------");
     }
 }
+
 
